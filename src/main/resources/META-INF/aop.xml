@@ -1,0 +1,6 @@
+<aspectj>
+    <aspects>
+        <aspect name="org.christianschenk.aspectjtest.aspects.AspectJAnnotation"/>
+        <aspect name="org.christianschenk.aspectjtest.example.session.SessionAspect"/>
+    </aspects>
+</aspectj>

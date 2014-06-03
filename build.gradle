@@ -1,0 +1,46 @@
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'idea'
+
+mainClassName = "org.christianschenk.aspectjtest.Main"
+
+repositories {
+	mavenCentral()	
+}
+
+dependencies {
+	compile "org.aspectj:aspectjrt:1.8.0",
+			"log4j:log4j:1.2.17"
+
+	runtime "org.aspectj:aspectjweaver:1.8.0"
+	//compile "org.aspectj:aspectjweaver:1.8.0"
+
+}
+
+def aspectjWeaverFile = null
+
+//Alternative to setting jvmArgs
+task runJava(dependsOn: classes) << {
+
+	javaexec {
+		main = "org.christianschenk.aspectjtest.Main"
+		classpath sourceSets.main.runtimeClasspath
+		jvmArgs "-javaagent:$aspectjWeaverFile"
+	}
+}
+
+runJava.doFirst {
+	configurations.runtime.files.each { file -> 
+		if(file.name.contains("aspectjweaver")){
+			aspectjWeaverFile = "$file"
+		}
+	}
+}
+
+run.doFirst {
+	configurations.runtime.files.each { file -> 
+		if(file.name.contains("aspectjweaver")){			
+			jvmArgs "-javaagent:$file"
+		}
+	}
+}
